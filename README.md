@@ -1,6 +1,6 @@
 # sample-github-mvp
 
-Sample android application using MVP that return the details (name) of a GitHub username.
+Sample android application using MVP that returns the details (name) of a GitHub username.
 
 Technologies used:
 
