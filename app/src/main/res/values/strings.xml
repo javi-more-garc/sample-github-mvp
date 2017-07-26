@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sample GitHub MVP</string>
+    <string name="get_details">Get details</string>
+    <string name="get_details_in_progress">Getting details...</string>
+    <string name="get_details_result_error">Error getting details for %1$s.</string>
+    <string name="get_details_result_not_found">User details not found for %1$s.</string>
+    <string name="get_details_result_ok">User details retrieved for %1$s.\nName: %2$s."</string>
+    <string name="username">Username</string>
+</resources>
