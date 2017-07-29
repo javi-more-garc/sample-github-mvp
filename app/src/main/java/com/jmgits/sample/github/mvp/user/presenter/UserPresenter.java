@@ -1,23 +1,29 @@
-package com.jmgits.sample.github.mvp.user.presenter.base.impl;
+package com.jmgits.sample.github.mvp.user.presenter;
 
-import com.jmgits.sample.github.mvp.user.model.view.UserDetails;
 import com.jmgits.sample.github.mvp.user.model.service.UserService;
-import com.jmgits.sample.github.mvp.user.presenter.base.UserPresenter;
-import com.jmgits.sample.github.mvp.user.presenter.model.UserModel;
-import com.jmgits.sample.github.mvp.user.presenter.view.UserView;
+import com.jmgits.sample.github.mvp.user.model.view.UserDetails;
+import com.jmgits.sample.github.mvp.user.presenter.UserPresenterContract;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Created by javi-more-garc on 26/07/17.
  */
+@Singleton
+public class UserPresenter implements UserPresenterContract, UserPresenterContract.UserDetailsListener {
 
-public class UserPresenterImpl implements UserPresenter, UserPresenter.UserDetailsListener {
+    private final UserPresenterContract.Model mUserModel;
+    private UserPresenterContract.View mUserView;
 
-    private final UserView mUserView;
-    private final UserModel mUserModel;
+    @Inject
+    public UserPresenter(UserService userService) {
+        this.mUserModel = userService;
+    }
 
-    public UserPresenterImpl(UserView userView) {
+    @Override
+    public void setView(UserPresenterContract.View userView) {
         this.mUserView = userView;
-        this.mUserModel = new UserService();
     }
 
     @Override

@@ -15,11 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jmgits.sample.github.mvp.App;
 import com.jmgits.sample.github.mvp.R;
 import com.jmgits.sample.github.mvp.user.model.view.UserDetails;
-import com.jmgits.sample.github.mvp.user.presenter.base.UserPresenter;
-import com.jmgits.sample.github.mvp.user.presenter.base.impl.UserPresenterImpl;
-import com.jmgits.sample.github.mvp.user.presenter.view.UserView;
+import com.jmgits.sample.github.mvp.user.presenter.UserPresenterContract;
+import com.jmgits.sample.github.mvp.user.presenter.UserPresenter;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,7 +30,7 @@ import butterknife.OnClick;
 /**
  * Created by javi-more-garc on 26/07/17.
  */
-public class UserActivity extends AppCompatActivity implements UserView {
+public class UserActivity extends AppCompatActivity implements UserPresenterContract.View {
 
     private static final String TAG = UserActivity.class.getSimpleName();
 
@@ -38,8 +40,10 @@ public class UserActivity extends AppCompatActivity implements UserView {
     @Bind(R.id.button_get_details)
     Button mGetDetailsButton;
 
-    private UserPresenter presenter;
-    private ProgressDialog progressDialog;
+    @Inject
+    UserPresenter mUserPresenter;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,17 +84,19 @@ public class UserActivity extends AppCompatActivity implements UserView {
             }
         });
 
-        presenter = new UserPresenterImpl(this);
+        App.getUserComponent(this).inject(this);
+        mUserPresenter.setView(this);
     }
 
     @OnClick(R.id.button_get_details)
     public void doGetDetails(View view) {
 
-        progressDialog = ProgressDialog.show(this, getString(R.string.get_details_in_progress), null);
+        mProgressDialog = ProgressDialog.show(this, getString(R.string.get_details_in_progress), null);
+        mProgressDialog.show();
 
         String username = mUsernameEditText.getText().toString();
 
-        presenter.getDetailsByUsername(username);
+        mUserPresenter.getDetailsByUsername(username);
     }
 
     @Override
@@ -115,7 +121,7 @@ public class UserActivity extends AppCompatActivity implements UserView {
     // private methods
 
     private void showFeedback(String message) {
-        progressDialog.dismiss();
+        mProgressDialog.dismiss();
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

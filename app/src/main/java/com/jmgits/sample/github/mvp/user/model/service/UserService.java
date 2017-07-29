@@ -1,40 +1,33 @@
 package com.jmgits.sample.github.mvp.user.model.service;
 
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
-import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.jmgits.sample.github.mvp.user.model.client.GitHubClient;
 import com.jmgits.sample.github.mvp.user.model.view.UserDetails;
-import com.jmgits.sample.github.mvp.user.presenter.base.UserPresenter;
-import com.jmgits.sample.github.mvp.user.presenter.model.UserModel;
+import com.jmgits.sample.github.mvp.user.presenter.UserPresenterContract;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by javi-more-garc on 26/07/17.
  */
-
-public class UserService implements UserModel {
+@Singleton
+public class UserService implements UserPresenterContract.Model {
 
     private final GitHubClient mGitHubClient;
 
-    public UserService(){
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.github.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-
-        mGitHubClient = retrofit.create(GitHubClient.class);
+    @Inject
+    public UserService(GitHubClient mGitHubClient) {
+        this.mGitHubClient = mGitHubClient;
     }
 
     @Override
-    public void getDetailsByUsername(final String username, final UserPresenter.UserDetailsListener callback) {
+    public void getDetailsByUsername(final String username, final UserPresenterContract.UserDetailsListener callback) {
 
         mGitHubClient.getDetailsByUsername(username)
                 .subscribeOn(Schedulers.io())
